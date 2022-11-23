@@ -15,19 +15,19 @@
 
             var context = cxAssinatura.getContext("2d");
 
-            var desenhando = false;
+            var assinando = false;
             
             cxAssinatura.onmousedown = function (evt) {
                 context.moveTo(evt.clientX, evt.clientY);
-                desenhando = true;
+                assinando = true;
             }
 
             cxAssinatura.onmouseup = function () {
-                desenhando = false;
+                assinando = false;
             }
 
             cxAssinatura.onmousemove = function (evt) {
-                if (desenhando) {
+                if (assinando) {
                     context.lineTo(evt.clientX, evt.clientY);
                     context.stroke();
                 }
@@ -37,19 +37,19 @@
                 console.log('entrei');
                 var touch = evt.touches[0];
                 context.moveTo(touch.clientX, touch.clientY);
-                desenhando = true;
+                assinando = true;
             }, false);
 
             cxAssinatura.addEventListener("touchend", function (evt) {
                 console.log('sai');
                 var mouseEvent = new MouseEvent("mouseup", {});
                 cxAssinatura.dispatchEvent(mouseEvent);
-                desenhando = false;
+                assinando = false;
             }, false);  
             
             cxAssinatura.addEventListener("touchmove", function (evt) {
                 console.log('movendo');
-                if (desenhando) {
+                if (assinando) {
                     var touch = evt.touches[0];
                     context.lineTo(touch.clientX, touch.clientY);
                     context.stroke();
@@ -70,7 +70,8 @@
 
                 http.onreadystatechange = function(data) {
                     if(http.readyState == 4 && http.status == 200) {
-                        alert("Imagem salvada com sucesso");
+                        context.clearRect(0, 0, cxAssinatura.width, cxAssinatura.height);
+                        alert("Assinatura salva com sucesso!");
                     }
                 }
 
