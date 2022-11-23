@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Assinatura</title>
+
+    <script>
+        window.onload = function () {
+            var largura = window.innerWidth - 16;
+            var altura = window.innerHeight / 2;
+
+            var quadro = document.getElementById("quadro");
+            quadro.setAttribute("width", largura);
+            quadro.setAttribute("height", altura);
+
+            var ctx = quadro.getContext("2d");
+
+            var desenhando = false;
+            
+            quadro.onmousedown = function (evt) {
+                ctx.moveTo(evt.clientX, evt.clientY);
+                desenhando = true;
+            }
+
+            quadro.onmouseup = function () {
+                desenhando = false;
+            }
+
+            quadro.onmousemove = function (evt) {
+                if (desenhando) {
+                    ctx.lineTo(evt.clientX, evt.clientY);
+                    ctx.stroke();
+                }
+            }
+
+            quadro.addEventListener("touchstart", function (evt) {
+                console.log('entrei');
+                var touch = evt.touches[0];
+                ctx.moveTo(touch.clientX, touch.clientY);
+                desenhando = true;
+            }, false);
+
+            quadro.addEventListener("touchend", function (evt) {
+                console.log('sai');
+                var mouseEvent = new MouseEvent("mouseup", {});
+                quadro.dispatchEvent(mouseEvent);
+                desenhando = false;
+            }, false);  
+            
+            quadro.addEventListener("touchmove", function (evt) {
+                console.log('movendo');
+                if (desenhando) {
+                    var touch = evt.touches[0];
+                    ctx.lineTo(touch.clientX, touch.clientY);
+                    ctx.stroke();
+                }
+            }, false);
+            
+            const assinarBtn = document.getElementById("assinarBtn");
+
+            assinarBtn.onclick = function (e) {
+                var http = new XMLHttpRequest();
+
+                var image = quadro.toDataURL()
+
+                var params = "image=" + image; 
+
+                http.open("POST", "save.php", true);
+                http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                http.onreadystatechange = function(data) {
+                    if(http.readyState == 4 && http.status == 200) {
+                        alert("Imagem salvada com sucesso");
+                    }
+                }
+
+                http.send(params);
+            }
+            
+            const limparBtn = document.getElementById("limparBtn");
+            
+            limparBtn.onclick = function (e) {
+                
+                ctx.clearRect(0, 0, quadro.width, quadro.height);
+                
+            }
+
+        }
+
+
+    </script>
+</head>
+<body>
+    <canvas id="quadro" width="100%" style="background:beige"></canvas>
+    <br />
+    <button id="assinarBtn" type="button" style="height: 100px; width: 200px; font-size: 32px;">Assinar</button>
+    &nbsp;
+    <button id="limparBtn" type="button" style="height: 100px; width: 200px; font-size: 32px;">Limpar</button>
+</body>
+</html>
