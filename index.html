@@ -9,50 +9,50 @@
             var largura = window.innerWidth - 16;
             var altura = window.innerHeight / 2;
 
-            var quadro = document.getElementById("quadro");
-            quadro.setAttribute("width", largura);
-            quadro.setAttribute("height", altura);
+            var cxAssinatura = document.getElementById("cxAssinatura");
+            cxAssinatura.setAttribute("width", largura);
+            cxAssinatura.setAttribute("height", altura);
 
-            var ctx = quadro.getContext("2d");
+            var context = cxAssinatura.getContext("2d");
 
             var desenhando = false;
             
-            quadro.onmousedown = function (evt) {
-                ctx.moveTo(evt.clientX, evt.clientY);
+            cxAssinatura.onmousedown = function (evt) {
+                context.moveTo(evt.clientX, evt.clientY);
                 desenhando = true;
             }
 
-            quadro.onmouseup = function () {
+            cxAssinatura.onmouseup = function () {
                 desenhando = false;
             }
 
-            quadro.onmousemove = function (evt) {
+            cxAssinatura.onmousemove = function (evt) {
                 if (desenhando) {
-                    ctx.lineTo(evt.clientX, evt.clientY);
-                    ctx.stroke();
+                    context.lineTo(evt.clientX, evt.clientY);
+                    context.stroke();
                 }
             }
 
-            quadro.addEventListener("touchstart", function (evt) {
+            cxAssinatura.addEventListener("touchstart", function (evt) {
                 console.log('entrei');
                 var touch = evt.touches[0];
-                ctx.moveTo(touch.clientX, touch.clientY);
+                context.moveTo(touch.clientX, touch.clientY);
                 desenhando = true;
             }, false);
 
-            quadro.addEventListener("touchend", function (evt) {
+            cxAssinatura.addEventListener("touchend", function (evt) {
                 console.log('sai');
                 var mouseEvent = new MouseEvent("mouseup", {});
-                quadro.dispatchEvent(mouseEvent);
+                cxAssinatura.dispatchEvent(mouseEvent);
                 desenhando = false;
             }, false);  
             
-            quadro.addEventListener("touchmove", function (evt) {
+            cxAssinatura.addEventListener("touchmove", function (evt) {
                 console.log('movendo');
                 if (desenhando) {
                     var touch = evt.touches[0];
-                    ctx.lineTo(touch.clientX, touch.clientY);
-                    ctx.stroke();
+                    context.lineTo(touch.clientX, touch.clientY);
+                    context.stroke();
                 }
             }, false);
             
@@ -61,7 +61,7 @@
             assinarBtn.onclick = function (e) {
                 var http = new XMLHttpRequest();
 
-                var image = quadro.toDataURL()
+                var image = cxAssinatura.toDataURL()
 
                 var params = "image=" + image; 
 
@@ -81,7 +81,7 @@
             
             limparBtn.onclick = function (e) {
                 
-                ctx.clearRect(0, 0, quadro.width, quadro.height);
+                context.clearRect(0, 0, cxAssinatura.width, cxAssinatura.height);
                 
             }
 
@@ -91,7 +91,7 @@
     </script>
 </head>
 <body>
-    <canvas id="quadro" width="100%" style="background:beige"></canvas>
+    <canvas id="cxAssinatura" width="100%" style="background:beige"></canvas>
     <br />
     <button id="assinarBtn" type="button" style="height: 100px; width: 200px; font-size: 32px;">Assinar</button>
     &nbsp;
