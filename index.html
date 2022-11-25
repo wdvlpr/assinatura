@@ -6,16 +6,21 @@
 
     <script>
         window.onload = function () {
-            var largura = window.innerWidth - 16;
-            var altura = window.innerHeight / 2;
+            var largura = 600; // window.innerWidth - 16;
+            var altura = 300; // window.innerHeight / 2;
 
-            var cxAssinatura = document.getElementById("cxAssinatura");
+            let cxAssinatura = document.getElementById("cxAssinatura");
             cxAssinatura.setAttribute("width", largura);
             cxAssinatura.setAttribute("height", altura);
 
-            var context = cxAssinatura.getContext("2d");
+			let assinaturaPdf = document.getElementById("assinaturaPdf");
+            assinaturaPdf.setAttribute("width", window.innerWidth);
+            assinaturaPdf.setAttribute("height", window.innerHeight);
 
-            var assinando = false;
+
+            let context = cxAssinatura.getContext("2d");
+
+            let assinando = false;
             
             cxAssinatura.onmousedown = function (evt) {
                 context.moveTo(evt.clientX, evt.clientY);
@@ -57,11 +62,13 @@
             }, false);
             
             const assinarBtn = document.getElementById("assinarBtn");
+			const assinaturaImg = document.getElementById("assinaturaImg");
 
             assinarBtn.onclick = function (e) {
                 var http = new XMLHttpRequest();
 
                 var image = cxAssinatura.toDataURL()
+				
 
                 var params = "image=" + image; 
 
@@ -70,7 +77,21 @@
 
                 http.onreadystatechange = function(data) {
                     if(http.readyState == 4 && http.status == 200) {
-                        context.clearRect(0, 0, cxAssinatura.width, cxAssinatura.height);
+                        /*
+						context.clearRect(0, 0, cxAssinatura.width, cxAssinatura.height);
+						context.clear(0, 0, cxAssinatura.width, cxAssinatura.height);
+						*/
+						
+						cxAssinatura = document.getElementById("cxAssinatura");
+						cxAssinatura.setAttribute("width", largura);
+						cxAssinatura.setAttribute("height", altura);
+
+						context = cxAssinatura.getContext("2d");
+
+						assinando = false;						
+						
+						//assinaturaImg.src = http.response+".png";
+						assinaturaPdf.src = http.response+".pdf";
                         alert("Assinatura salva com sucesso!");
                     }
                 }
@@ -81,9 +102,18 @@
             const limparBtn = document.getElementById("limparBtn");
             
             limparBtn.onclick = function (e) {
-                
-                context.clearRect(0, 0, cxAssinatura.width, cxAssinatura.height);
-                
+                //context.clearRect(0, 0, cxAssinatura.width, cxAssinatura.height);
+
+				cxAssinatura = document.getElementById("cxAssinatura");
+				cxAssinatura.setAttribute("width", largura);
+				cxAssinatura.setAttribute("height", altura);
+
+				context = cxAssinatura.getContext("2d");
+
+				assinando = false;								
+				
+				assinaturaPdf.src = "";				
+				
             }
 
         }
@@ -97,5 +127,8 @@
     <button id="assinarBtn" type="button" style="height: 100px; width: 200px; font-size: 32px;">Assinar</button>
     &nbsp;
     <button id="limparBtn" type="button" style="height: 100px; width: 200px; font-size: 32px;">Limpar</button>
+	<hr />
+	<!-- <img src="" id="assinaturaImg" alt="Imagem da assinatura" title="Imagem da assinatura"  /> -->
+	<iframe src="" id="assinaturaPdf" alt="PDF com assinatura" title="PDF com assinatura" ></iframe>
 </body>
 </html>
